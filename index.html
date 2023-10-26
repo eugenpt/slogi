@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+<link rel="stylesheet" type="text/css" href="syle.css">
+<script type="text/javascript" src="script.js"></script>
+<script type="text/javascript" src="all_words.js"></script>
+<script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><script defer data-domain="slogi.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script></head>
+<body onload="onBodyLoad();">
+	<div id="main">
+<div id="h1">&nbsp;</div>
+</div>
+<div id="controls">
+	<div id="selects">
+		<div id="typediv" class="btn" onclick="changeType()">слова</div>
+		
+		<select id="level" name="level" onchange="onLevelChange();">
+		  <option value="1">1</option>
+		  <option value="words">Слова</option>
+		  <option value="Numbers">Числа</option>
+		  <option value="audi">Audi</option>
+		</select>
+	</div>
+	<div>
+<div id="sT">
+<input type="range" id="sliderTime" min=1 max=1500 oninput="onTimeChange();">
+</div>
+<div id="sS">
+<input type="range" id="sliderSize" min=0 max=50 oninput="onSizeChange();">
+</div>
+<div id="btns"><div id="go" class="btn" onclick="onGo();">НОВОЕ</div><div id="repeat" onclick="onRepeat();" class="btn">ПОВТОР</div>
+</div>
+</div>
+
+</body>
+</html>
