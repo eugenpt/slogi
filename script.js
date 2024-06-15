@@ -2,7 +2,9 @@
 CUR_STORY = null;
 CUR_STORY_PART_J = null;
 
-_OPTS = {
+MAX_HIST = 30;
+
+_OPTS_def = {
     cursive_on: false,
     keep:false,
     fontmode:0,
@@ -12,6 +14,26 @@ _OPTS = {
     size:7,
     dark:true,
     last_values:{},
+    history:[],
+    history_pos:0,
+}
+
+_OPTS = structuredClone(_OPTS_def);
+
+function addOptsDef(){
+    for(var k in _OPTS_def){
+        if (!(k in _OPTS)){
+            _OPTS[k] = structuredClone(_OPTS_def[k]);
+        }
+    }
+}
+
+function addToHistory(word){
+    _OPTS.history.unshift(word);
+    if(_OPTS.length > MAX_HIST){
+        _OPTS.history = _OPTS.history.slice(0, MAX_HIST);
+    }
+    setOpts('history',_OPTS.history);
 }
 
 function onBodyLoad(){
@@ -24,17 +46,28 @@ function onBodyLoad(){
 
     blink(' ')
 
-    WORD = makeOKLines('Гарри и Рон спасли Джинни из Тайной комнаты.');
 
 
     const temp = localStorage.getItem("_OPTS");
     if(temp){
         _OPTS = JSON.parse(temp);
+        addOptsDef();
     }
+
+    console.log(_OPTS.history_pos)
 
     initWords();
 
     setInterfaceToOPTS();
+
+    if(_OPTS.history.length==0){
+        console.log('initting stuff')
+        _OPTS.history.push(makeOKLines('Гарри и Рон спасли Джинни из Тайной комнаты.'));
+    }
+    if(_OPTS.keep){
+        _OPTS.history_pos++;
+        onGo();
+    }
 }
 
 function setInterfaceToOPTS(){
@@ -188,13 +221,43 @@ function getTime(){
 
 WORD = 'ПА';
 
+function onPrev(){
+    if(_OPTS.history_pos>=_OPTS.history.length-1){
+
+    } else {
+        _OPTS.history_pos ++;
+        _OPTS.history_pos ++;
+        onGo();
+    }
+}
+
 function onGo(){
-    WORD = genRandomWord();
+    if(_OPTS.history_pos==0){
+        WORD = genRandomWord();
+        addToHistory(WORD);
+    } else {
+        setOpts('history_pos',_OPTS.history_pos-1);
+        WORD = _OPTS.history[_OPTS.history_pos];
+    }
+    updatePrevNextButtons();
     onRepeat();
 }
 
 function onRepeat(){
     blink(WORD);
+}
+
+function updatePrevNextButtons(){
+    if(_OPTS.history_pos==0){
+        _('#go').innerHTML = 'НОВОЕ';
+    } else {
+        _('#go').innerHTML = 'След.';
+    }
+    if(_OPTS.history_pos>=_OPTS.history.length-1){
+        _('#prev').disabled = 'disabled';
+    } else {
+        _('#prev').disabled = '';
+    }    
 }
 
 ///
@@ -320,6 +383,7 @@ function onUpperSwitchClick(){
 
 
 function nextStory(){
-    WORD = genNextStory();
-    blink(WORD);
+    CUR_STORY=null;
+    _OPTS.history_pos=0;
+    onGo();
 }
