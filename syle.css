@@ -1,3 +1,24 @@
+@font-face {
+  font-family: 'Handwritten';
+  src: url('fonts/ofont.ru_Pacifico.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Handwritten2';
+  src: url('fonts/ofont.ru_Gogol.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Handwritten3';
+  src: url('fonts/ofont.ru_Denistina.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Handwritten4';
+  src: url('fonts/ofont.ru_Rozovii Chulok.ttf')  format('truetype');
+}
+
+
 html, body {
 	touch-action: none;
 }
@@ -9,6 +30,30 @@ body{
     min-height: 100vh;
     margin: 0px;
     padding: 0px;
+    overflow: hidden;
+}
+
+.bg-blue{
+  background-color: #2196f3;
+}
+
+.blue{
+  color: #2196f3;
+}
+
+.dark {
+  background-color:  #121212;
+  background:  #121212;
+  color: #B9B4C7;
+}
+
+.dark option{
+  background:  #121212;
+  color: #B9B4C7;
+}
+.dark select{
+  background:  #121212;
+  color: #B9B4C7;
 }
 
 #main {
@@ -34,6 +79,39 @@ body{
 }
 
 
+.myfont.font0{
+    font-family: 'Handwritten', Fallback, sans-serif !important;
+    letter-spacing: .5rem;
+    line-height: 120%;
+}
+
+.myfont.font1{
+   font-family: 'Handwritten', Fallback, sans-serif !important; 
+    letter-spacing: 0px;
+    line-height: 120%;
+}
+
+.myfont.font2{
+   font-family: 'Handwritten2', Fallback, sans-serif !important; 
+    line-height: 120%;
+}
+
+.myfont.font3{
+   font-family: 'Handwritten3', Fallback, sans-serif !important; 
+    letter-spacing: 0px;
+    line-height: 100%;
+}
+
+.myfont.font4{
+   font-family: 'Handwritten4', Fallback, sans-serif !important; 
+    letter-spacing: 0px;
+    line-height: 120%;
+}
+
+#h1{
+    overflow: visible ;
+}
+
 #controls {
 	bottom: 1vh;
 	position: absolute;
@@ -42,7 +120,7 @@ body{
 }
 
 #btns{
-	width: 70%;
+	width: 100vw;
 	height: 10vh;
 	font-size: 8vh;
 	bottom: 1vh;
@@ -51,7 +129,7 @@ body{
 
 
 #btns div{
-	width: 45%;
+	width: 35%;
 	overflow: hidden;
 	display: inline-block;
     font-size: 3vh;
@@ -107,12 +185,20 @@ input[type="range"]::-webkit-slider-runnable-track {
   background: #053a5f;
   height: 5vh;
 }
+input[type="range"]:disabled::-webkit-slider-runnable-track {
+  background: #555;
+}
+
 
 /******** Firefox ********/
 input[type="range"]::-moz-range-track {
   background: #053a5f;
   height: 5vh;
 }
+input[type="range"]:disabled::-moz-range-track {
+  background: #555;
+}
+
 
 /***** Thumb Styles *****/
 /***** Chrome, Safari, Opera, and Edge Chromium *****/
@@ -123,4 +209,120 @@ input[type="range"]::-webkit-slider-thumb {
    background-color: #5cd5eb;
    height: 4vh;
    width: 5vw;    
+}
+input[type="range"]:disabled::-webkit-slider-thumb {
+  background: #666;
+}
+/*--------------------------------------------*/
+
+#dark-mode-switch{
+  position: absolute;
+  right: 5px;
+  top:5px;
+}
+
+#font-switch{
+  position: absolute;
+  left: 5px;
+  top:5px;  
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+
+
+  #btns div.switchV {
+    font-family: monospace;
+    position: relative;
+    width: 10vw;
+    height: 10vh;
+    background-color: #ccc;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    overflow: hidden;
+  }
+  #btns div.switchV:before {
+    content: 'б';
+    
+    font-size: 8vw;
+    color: white;
+    position: absolute;
+    width: 10vw;
+    height: 10vh;
+    line-height: 60px;
+    text-align: center;
+    top: 4vh;
+    left: 0;
+    transition: top 0.3s;
+  }
+  #btns div.switchV.on:before {
+    top: 0vh;
+  }
+  #btns div.switchV.on {
+    background-color: #2196f3;
+  }
+  #btns div.switchV.on {
+    font-family: 'Handwritten', cursive;
+  }
+
+/*  */
+
+#leftUpperSwitch{
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  width: 48px;
+  height: 48px;
+  font-size: 40px;
+/*  background-color: white;*/
 }

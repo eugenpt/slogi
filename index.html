@@ -7,10 +7,22 @@
 <link rel="stylesheet" type="text/css" href="syle.css">
 <script type="text/javascript" src="script.js"></script>
 <script type="text/javascript" src="all_words.js"></script>
-<script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><script defer data-domain="slogi.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script></head>
-<body onload="onBodyLoad();">
+<script type="text/javascript" src="all_sentences.js"></script>
+<script type="text/javascript" src="all_stories.js"></script>
+<script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><script defer data-domain="slogi.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><script defer data-domain="slogi.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script defer data-domain="slogi.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><script defer data-domain="slogi.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script><script defer data-domain="slogi.tiiny.site" src="https://analytics.tiiny.site/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+<body onload="onBodyLoad();" class="dark">
+	<label class="switch" id="dark-mode-switch">
+	  <input id="cbDark" type="checkbox" checked onchange="onDarkChange();">
+	  <span class="slider"></span>
+	</label>
+	<!-- <label class="switch" id="font-switch">
+	  <input id="cbFont" type="checkbox" onchange="onFontChange();">
+	  <span class="slider"></span>
+	</label> -->
+	<div id="leftUpperSwitch" onclick="onUpperSwitchClick();" class="myfont font0">аб</div>
+	<br><br>
 	<div id="main">
-<div id="h1">&nbsp;</div>
+<div id="h1" class="font0">&nbsp;</div>
 </div>
 <div id="controls">
 	<div id="selects">
@@ -22,16 +34,27 @@
 		  <option value="Numbers">Числа</option>
 		  <option value="audi">Audi</option>
 		</select>
+
+		<div id="btnNextStory" style="display: none;" class="btn" onclick="nextStory()">след. ист.</div>
 	</div>
 	<div>
 <div id="sT">
-<input type="range" id="sliderTime" min=1 max=1500 oninput="onTimeChange();">
+<input type="range" id="sliderTime" min=1 max=1500 oninput="onTimeChange();"><div style="display: inline-block; margin: 1vh; vertical-align: top;">
+	<label class="switch" id="keep-switch">
+	  <input id="cbKeep" type="checkbox" onchange="onKeepChange();">
+	  <span class="slider"></span>
+	</label>
 </div>
+</div>
+
 <div id="sS">
 <input type="range" id="sliderSize" min=0 max=50 oninput="onSizeChange();">
 </div>
 <div id="btns"><div id="go" class="btn" onclick="onGo();">НОВОЕ</div><div id="repeat" onclick="onRepeat();" class="btn">ПОВТОР</div>
+<div class="switchV" id="verticalSwitch" onclick="onFontChange();"></div>
+
 </div>
+
 </div>
 
 </body>
