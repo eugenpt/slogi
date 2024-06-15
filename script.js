@@ -1,25 +1,71 @@
+
+CUR_STORY = null;
+CUR_STORY_PART_J = null;
+
+_OPTS = {
+    cursive_on: false,
+    keep:false,
+    fontmode:0,
+    type:"слова",
+    level:"0",
+    time:751,
+    size:7,
+    dark:true,
+    last_values:{},
+}
+
 function onBodyLoad(){
     console.log('LOAD')
 
-      const switchElement = document.getElementById('verticalSwitch');
-      switchElement.addEventListener('click', () => {
+    const switchElement = document.getElementById('verticalSwitch');
+        switchElement.addEventListener('click', () => {
         switchElement.classList.toggle('on');
-      });
+    });
 
     blink(' ')
 
     WORD = makeOKLines('Гарри и Рон спасли Джинни из Тайной комнаты.');
 
+
+    const temp = localStorage.getItem("_OPTS");
+    if(temp){
+        _OPTS = JSON.parse(temp);
+    }
+
     initWords();
 
-    onTypeChange();
+    setInterfaceToOPTS();
 }
 
+function setInterfaceToOPTS(){
+    if(_OPTS.cursive_on){
+        _('#verticalSwitch').classList.add('on')
+    }else{
+        _('#verticalSwitch').classList.remove('on')
+    }
+    onFontChange();
 
-KEEP = 0;
+    if((_('.'+fontClass(0)).length>0) && (_OPTS.fontmode!=0)){
+        _('.'+fontClass(0)).forEach(e=>e.classList.add(fontClass(_OPTS.fontmode)));
+        _('.'+fontClass(0)).forEach(e=>e.classList.remove(fontClass(0)));
+    }
 
-CUR_STORY = null;
-CUR_STORY_PART_J = null;
+    _('#cbKeep').checked=_OPTS.keep;
+
+    _('#typediv').innerHTML = _OPTS.type;
+
+    _('#level').value=_OPTS.level;
+    console.log(_OPTS.level)
+
+    _('#sliderTime').value = _OPTS.time;
+    _('#sliderSize').value = _OPTS.size;
+
+    _('#cbDark').checked = _OPTS.dark;
+    onDarkChange();
+
+    onTypeChange(_OPTS.level);    
+    onKeepChange();
+}
 
 function _(s){
     if(s[0]=='#'){
@@ -73,16 +119,15 @@ function genRandomWord(){
 }
 
 
-LAST_VALUES = {}
-
 function reset_cur_story(){
     CUR_STORY = null;
     CUR_STORY_PART_J = null;
 }
 
 function onLevelChange(){
+    setOpts('level',getLevel());
     reset_cur_story();
-    LAST_VALUES[getType()] = getLevel();
+    setOpts('last_values.'+getType(), getLevel());
 
     _('#btnNextStory').style.display = (getLevel() == 'Ист.')?'':'none';
 }
@@ -92,10 +137,24 @@ function clearH1(){
     _('#h1').innerHTML = '&nbsp;';
 }
 
+function setOpts(key, value){
+    T = _OPTS;
+    key_t = key.split('.');
+    for(var j=0; j<key_t.length-1 ; j++){
+        if (!(key_t[j] in T)){
+            T[key_t[j]] = {};
+        }
+        T = T[key_t[j]];
+    }
+    T[key_t[key_t.length-1]] = value;
+    localStorage.setItem("_OPTS",JSON.stringify(_OPTS));
+}
+
 function onSizeChange(){
+    setOpts('size',getSize());
     blink(WORD);
     return;
-    if(KEEP){
+    if(_OPTS.keep){
         show(WORD);
     }else{
         blink(getSize());
@@ -111,11 +170,12 @@ BLINK_Timeout = null;
 function blink(stuff){
     clearTimeout(BLINK_Timeout);
     show(stuff);
-    if(KEEP==0)
+    if(_OPTS.keep==0)
         BLINK_Timeout = setTimeout(clearH1, getTime());
 }
 
 function onTimeChange(){
+    setOpts('time',getTime());
     blink(getTime())
 }
 
@@ -139,17 +199,17 @@ function onRepeat(){
 
 ///
 
+function changeType(){
+    setOpts('type',isTypeNumbers()?'слова':'числа');
+    onTypeChange();
+}
+
 function isTypeNumbers(){
     return getType() =='числа';
 }
 
-function changeType(){
-    _('#typediv').innerHTML = isTypeNumbers()?'слова':'числа';
-    onTypeChange();
-}
-
 function getType(){
-    return _('#typediv').innerHTML
+    return _OPTS.type;
 }
 
 function getLevelSelect(){
@@ -172,7 +232,9 @@ function getLevel(){
     return getLevelSelect().value;
 }
 
-function onTypeChange(){
+function onTypeChange(level){
+    _('#typediv').innerHTML = _OPTS.type;
+
     var levels = [1,2,3,4,5,6,7,8,9,10];
 
     if (isTypeNumbers()) {
@@ -183,15 +245,21 @@ function onTypeChange(){
 
     fillLevels(levels);
 
-    if (LAST_VALUES[getType()]) {
-        getLevelSelect().value = LAST_VALUES[getType()];
+    if (level!=null) {
+        getLevelSelect().value = level;
+    } else if((_OPTS.last_values[getType()])&&(_OPTS.last_values[getType()]!='')) {
+        getLevelSelect().value = _OPTS.last_values[getType()];
+    }else{
+        getLevelSelect().value = levels[0];
     }
+
     onLevelChange();
 }
 
 
 function onDarkChange(){
-    if(_('#cbDark').checked){
+    setOpts('dark', _('#cbDark').checked);
+    if(_OPTS.dark){
         document.body.classList.add('dark');
     } else {
         document.body.classList.remove('dark');
@@ -199,14 +267,13 @@ function onDarkChange(){
 }
 
 function onKeepChange(){
-    if(_('#cbKeep').checked){
-        KEEP = 1;
+    setOpts('keep', _('#cbKeep').checked);
+    if(_OPTS.keep){
         show(WORD);
         clearTimeout(BLINK_Timeout);
         _('#sliderTime').disabled=true;
         _('#repeat').style.display='none'
     } else {
-        KEEP = 0;
         clearH1();
         _('#sliderTime').disabled=false;
         _('#repeat').style.display=''
@@ -215,14 +282,21 @@ function onKeepChange(){
 
 
 function onFontChange(){
-    const h1 = _('#h1');
-    h1.classList.toggle('myfont');
-    _('#leftUpperSwitch').classList.toggle('blue');
+    setTimeout(function(){
+        setOpts('cursive_on', _('#verticalSwitch').classList.contains('on'));
+        if(_OPTS.cursive_on){
+            _('#h1').classList.add('myfont');
+            _('#leftUpperSwitch').classList.add('blue');
+        }else{
+            _('#h1').classList.remove('myfont');
+            _('#leftUpperSwitch').classList.remove('blue');
+        }
 
-    WORD = makeOKLines(WORD);
-    if(_('#cbKeep').checked){
-        show(WORD);
-    }
+        WORD = makeOKLines(WORD); //it can change depending on the font
+        if(_('#cbKeep').checked){
+            show(WORD);
+        }
+    },50);
 }
 
 //
@@ -232,15 +306,14 @@ function fontClass(fontmode){
     return 'font'+fontmode;
 }
 
-FONTMODE=0;
 function onUpperSwitchClick(){
-    let new_FONTMODE = (FONTMODE==4)?0:FONTMODE+1;
+    let new_FONTMODE = (_OPTS.fontmode==4)?0:_OPTS.fontmode+1;
 
-    _('.'+fontClass(FONTMODE)).forEach(e=>e.classList.add(fontClass(new_FONTMODE)));
-    _('.'+fontClass(FONTMODE)).forEach(e=>e.classList.remove(fontClass(FONTMODE)));
+    _('.'+fontClass(_OPTS.fontmode)).forEach(e=>e.classList.add(fontClass(new_FONTMODE)));
+    _('.'+fontClass(_OPTS.fontmode)).forEach(e=>e.classList.remove(fontClass(_OPTS.fontmode)));
 
-    FONTMODE = new_FONTMODE;
-    console.log(FONTMODE);
+    setOpts('fontmode', new_FONTMODE);
+    console.log(_OPTS.fontmode);
 }
 
 //
